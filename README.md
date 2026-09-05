@@ -1,10 +1,55 @@
 # Heaven — The Bespoke Studio
 
-A conversion-focused furniture studio experience for the RacDox 2026 hackathon. Built for Heaven Furniture Mart, Chattogram.
+An interactive furniture landing page for Heaven Furniture Mart, Chattogram, built fresh for the RacDox 2026 hackathon. Explore a room, customize an original 3D furniture concept, inspect its materials under movable light, and carry that direction into a free consultation.
 
-## Direction
+## Run locally
 
-An editorial landing page with immersive interiors, an interactive furniture configurator, and a guided consultation. The primary action is to start a free design consultation through WhatsApp.
+Requires Node.js 22.12+.
+
+```sh
+npm ci
+npm run dev
+```
+
+Open the local URL printed by Vite. To serve the production output:
+
+```sh
+npm run build
+npm run preview
+```
+
+No API keys or backend are needed. `dist/` can be deployed to a static host. The GitHub repository is private; the website has not yet been publicly deployed.
+
+## What works
+
+- Living, bedroom, and dining exploration with original concept imagery.
+- Sofa, lounge chair, and coffee table in an on-demand 3D studio.
+- Upholstery, timber finish, width, rotation, camera reset, dimensions, day/evening light, and expanded view.
+- **vgpu material study:** movable light, warmth, magnification, and finish selection using an original WGSL shader. The same shader generates fallback textures through `vgpu/node`.
+- Validated local save/restore of design preferences.
+- Accessible consultation dialog with editable inquiry and an explicit WhatsApp handoff.
+- Responsive navigation, mobile consultation action, craft accordion, FAQ, and verified contact details from the brief.
+- Poster fallback and retry after WebGL loss; still material previews without WebGPU.
+
+## Checks and asset generation
+
+```sh
+npm run lint
+npm test
+npm run build
+npm run format:check
+npx vgpu doctor
+npm run gpu:check
+npm run assets:materials
+npm run assets:optimize
+```
+
+GPU commands require a supported local GPU. They are separate from standard CI. Regenerate editable furniture and GLB/poster exports with Blender:
+
+```sh
+/Applications/Blender.app/Contents/MacOS/Blender --background --python scripts/build_furniture.py
+npm run assets:optimize
+```
 
 ## Project documents
 
@@ -13,12 +58,14 @@ An editorial landing page with immersive interiors, an interactive furniture con
 - [Architecture](docs/ARCHITECTURE.md)
 - [Implementation checklist](docs/TODO.md)
 - [Asset register](docs/ASSETS.md)
-- [Testing and release](docs/QA.md)
-- [Hackathon submission](docs/SUBMISSION.md)
+- [vgpu opportunity and implementation](docs/VGPU.md)
+- [Verification results](docs/QA.md)
+- [Delivery report](docs/REPORT.md)
+- [Hackathon release and recording](docs/SUBMISSION.md)
 
 ## Source brief
 
-- https://www.racdox.com/hackathon
-- https://docs.google.com/document/d/1Acf_Jez9Sw0FamAvBcbm9PgqdJs52ivX1GkOK1a0EuQ/edit
+- [RacDox hackathon](https://www.racdox.com/hackathon)
+- [Company brief](https://docs.google.com/document/d/1Acf_Jez9Sw0FamAvBcbm9PgqdJs52ivX1GkOK1a0EuQ/edit)
 
-Generated interior images and furniture models are illustrative design concepts. No model is represented as a verified Heaven product. Business claims are limited to the company brief. This is a competition concept, not the official Heaven website.
+Generated interiors and furniture models are illustrative design concepts. No model is represented as a verified Heaven product. Business claims are limited to the company brief. This is a competition concept, not the official Heaven website. Personal inquiry details are not persisted; visitors choose whether to send the prepared message in WhatsApp.

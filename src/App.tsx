@@ -106,13 +106,11 @@ export default function App() {
   }
   function studio(product?: FurnitureKey) {
     if (product) setDesign((current) => selectProduct(current, product));
-    document
-      .getElementById("studio")
-      ?.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "instant"
-          : "smooth",
-      });
+    document.getElementById("studio")?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
   }
   function restoreDesign() {
     const saved = loadDesign();

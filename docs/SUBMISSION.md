@@ -12,7 +12,19 @@ Source: https://www.racdox.com/hackathon, read September 5, 2026.
 
 ## Suggested recording
 
-0–15s: hero and room switching. 15–40s: choose furniture, load 3D, rotate and change materials. 40–60s: save direction and open consultation, show selected details. 60–80s: mobile experience and showroom/contact details.
+0–12s: hero and room switching.
+
+12–30s: choose furniture, load 3D, rotate, and change upholstery/wood/width.
+
+30–48s: open Meet the materials; move the light, change warmth, and apply a finish.
+
+48–65s: save the direction, open consultation, and show the prepared message with matching choices. Do not send a test inquiry to the business.
+
+65–80s: mobile navigation, usable studio controls, and contact details.
+
+Suggested caption draft: “A home, unmistakably yours. My Heaven Furniture Mart concept connects an interactive 3D furniture studio and a live material light study to a simple design consultation. Original Blender models, custom material shading, and an experience built around the way people choose furniture. [PUBLIC WEBSITE URL] #racdox_hackathon”
+
+Replace the URL before publishing. This is draft copy, not a published post.
 
 ## Release gate
 

@@ -6,14 +6,14 @@ The subject is custom furniture for Chattogram homeowners. The page's job is to 
 
 ## Tokens
 
-| Name | Value | Purpose |
-| --- | --- | --- |
-| Lagoon | #173D36 | Core brand field and primary actions |
-| Porcelain | #F5F3ED | Main reading surface |
-| Linen | #E7E2D8 | Configurator stage and secondary panels |
-| Walnut | #302B26 | Body text |
-| Brass | #B89963 | Small material accents |
-| Chalk | #FFFFFF | Hero type and highlights |
+| Name      | Value   | Purpose                                 |
+| --------- | ------- | --------------------------------------- |
+| Lagoon    | #173D36 | Core brand field and primary actions    |
+| Porcelain | #F5F3ED | Main reading surface                    |
+| Linen     | #E7E2D8 | Configurator stage and secondary panels |
+| Walnut    | #302B26 | Body text                               |
+| Brass     | #B89963 | Small material accents                  |
+| Chalk     | #FFFFFF | Hero type and highlights                |
 
 Typography: Cormorant Garamond display, Manrope for text and controls. Large expressive serif hero paired with compact, legible UI. Host fonts locally.
 
@@ -46,4 +46,8 @@ The brief specifically requests ivory, teal, wood, and serif type, so that palet
 
 ## Interaction and motion
 
-Room tabs crossfade imagery; selected sample rings show current finish. Hover states gently elevate image interest, without hiding content. Scroll reveal uses progressive enhancement and respects reduced motion. Model rotation is user-driven. Mobile uses native scrolling and thumb-friendly controls.
+Room tabs crossfade imagery; selected sample rings show current finish. Hover states gently elevate image interest, without hiding content. CSS motion respects reduced-motion preferences. Model rotation is user-driven. Mobile uses native scrolling and thumb-friendly controls.
+
+## Material exploration
+
+The vgpu close-up study adds movable light and magnification to the material tray. It shares finish state with the model and inquiry. Product-facing language stays focused on texture and choice; GPU implementation details are kept in developer documentation.

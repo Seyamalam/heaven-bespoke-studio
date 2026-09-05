@@ -5,33 +5,36 @@
 - [x] Read hackathon and company brief.
 - [x] Define product requirements and editorial design direction.
 - [x] Document architecture, asset policy, verification, and submission.
-- [ ] Create remote GitHub repository and push planning checkpoint.
-- [ ] Scaffold React/TypeScript/Vite and CI.
+- [x] Create remote GitHub repository and push planning checkpoint.
+- [x] Scaffold React/TypeScript/Vite and CI.
 
 ## Assets
 
-- [ ] Generate living, bedroom, dining, and material imagery.
-- [ ] Inspect and optimize imagery; register prompts and provenance.
-- [ ] Create original sofa, lounge chair, and coffee table models in Blender.
-- [ ] Export GLBs and poster renders; inspect scale and appearance.
+- [x] Generate living, bedroom, dining, and material imagery.
+- [x] Inspect and optimize imagery; register prompts and provenance.
+- [x] Create original sofa, lounge chair, and coffee table models in Blender.
+- [x] Export GLBs and poster renders; inspect scale and appearance.
 
 ## Build
 
-- [ ] Responsive navigation and editorial hero with room switching.
-- [ ] Interactive collection exploration and material/craft content.
-- [ ] Furniture configurator with rotation, finishes, dimensions, and reset.
-- [ ] Save and restore a design locally.
-- [ ] Consultation dialog with editable WhatsApp inquiry.
-- [ ] Mobile sticky action, FAQ, contact links, accessibility and reduced motion.
+- [x] Responsive navigation and editorial hero with room switching.
+- [x] Interactive collection exploration and material/craft content.
+- [x] Furniture configurator with rotation, finishes, dimensions, and reset.
+- [x] Save and restore a design locally.
+- [x] Consultation dialog with editable WhatsApp inquiry.
+- [x] Mobile sticky action, FAQ, contact links, accessibility and reduced motion.
+
+- [x] vgpu live material study with light, warmth, magnification, and seven generated fallback assets.
+- [x] Verify WGSL and native GPU pixel output.
 
 ## Verification and delivery
 
-- [ ] Typecheck/lint, unit tests, and production build.
-- [ ] Desktop/mobile browser interaction checks.
-- [ ] Validate GLB loading and material changes in browser.
-- [ ] Keyboard, no-WebGL fallback, storage failure and inquiry checks.
-- [ ] Visual critique and polish.
-- [ ] Update documents, push commits, provide preview and repo link.
+- [x] Typecheck/lint, unit tests, and production build.
+- [x] Desktop/mobile browser interaction checks.
+- [x] Validate GLB loading and material changes in browser.
+- [x] Keyboard, no-WebGL fallback, storage failure and inquiry checks.
+- [x] Visual critique and polish.
+- [x] Update documents, push commits, provide preview and repo link.
 - [ ] Public deployment, screen recording, public social post and Google Form submission (release steps).
 
 ## Commit cadence

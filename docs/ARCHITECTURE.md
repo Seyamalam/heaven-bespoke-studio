@@ -34,3 +34,17 @@ Models use named materials `Fabric`, `Wood`, `Brass`; configurator clones loaded
 ## Deployment
 
 `npm run build` outputs `dist/` for any static host. SPA has no pathname routes. GitHub repository starts private; no secrets or local environment files are committed. CI runs lint/typecheck, tests, and build.
+
+## Material light study with vgpu
+
+`MaterialLab.tsx` is a lazy native dialog. `materialGpu.ts` owns the GPU lifecycle and loads `src/shaders/material.wgsl` as a raw Vite string. The WGSL fragment shader creates woven upholstery and timber grain, estimates surface normals, and shades with movable light and warmth. Finish selection updates the same `Design` object consumed by the Three.js scene and inquiry.
+
+The canvas surface must be rendered within `frame(gpu, callback)`. Uniform changes are coalesced into a single animation frame; there is no idle render loop. The canvas is resized with a bounded pixel ratio. Closing the dialog disconnects the observer, cancels pending frames, and disposes GPU resources. Unsupported devices use pre-rendered assets while keeping finish selection available.
+
+`scripts/render_materials.mjs` uses `vgpu/node` to render seven still previews from the exact shader. It reads real GPU pixels and asserts opacity, visible variation, and response to relighting. Standard CI has no native GPU requirement.
+
+## Deferred 3D loading boundary
+
+Resolve `useGLTF` in `FurnitureScene` before mounting the R3F canvas. Suspending the model inside a newly created canvas caused reproducible context loss in the tested browser; moving the asset boundary outside the canvas resolved it. The viewer listens for context loss, shows the poster, preserves choices, and offers a fresh canvas on retry.
+
+The production 3D chunk is approximately 976 kB minified / 262 kB gzip, loaded only on request. The base application is approximately 230 kB / 73 kB gzip; the material study is a separate approximately 139 kB / 45 kB gzip chunk. Vite's large-chunk warning is retained and documented rather than hidden.
