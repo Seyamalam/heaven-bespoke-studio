@@ -9,7 +9,7 @@ import bpy
 from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[1]
-for folder in ['public/models', 'public/images', 'assets/source/blender', 'assets/source/posters']:
+for folder in ['assets/source/models', 'public/images', 'assets/source/blender', 'assets/source/posters']:
     (ROOT / folder).mkdir(parents=True, exist_ok=True)
 
 def material(name, color, roughness=.6, metallic=0):
@@ -131,7 +131,7 @@ for key, builder in [('sofa',sofa),('chair',chair),('table',table)]:
     brass=material('Brass',(.46,.31,.12),.30,.75)
     builder(fabric,wood,brass)
     bpy.ops.object.select_all(action='SELECT')
-    bpy.ops.export_scene.gltf(filepath=str(ROOT/'public/models'/f'{key}.glb'),export_format='GLB',use_selection=True,export_apply=True)
+    bpy.ops.export_scene.gltf(filepath=str(ROOT/'assets/source/models'/f'{key}.glb'),export_format='GLB',use_selection=True,export_apply=True)
 
     floor=material('Studio floor',(.78,.755,.70),.9)
     rounded('Render floor',(0,0,-.06),(200,200,.10),floor,.01)

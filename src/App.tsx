@@ -15,6 +15,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
+import RoomExplorer from "./components/RoomExplorer";
 import Configurator from "./components/Configurator";
 import Consultation from "./components/Consultation";
 import { defaultDesign, loadDesign, rooms, selectProduct } from "./lib/design";
@@ -143,8 +144,8 @@ export default function App() {
           <a href="#collections" onClick={() => setMenuOpen(false)}>
             Our collections
           </a>
-          <a href="#craft" onClick={() => setMenuOpen(false)}>
-            Our craft
+          <a href="#room" onClick={() => setMenuOpen(false)}>
+            Step inside
           </a>
           <a href="#studio" onClick={() => setMenuOpen(false)}>
             The bespoke studio <span className="nav-new">3D</span>
@@ -208,26 +209,28 @@ export default function App() {
             </div>
           </div>
           <div className="hero-image-wrap">
-            {rooms.map((r) => (
-              <picture
-                key={r.id}
-                className={`hero-picture ${r.id === activeRoom ? "active" : ""}`}
-                aria-hidden={r.id !== activeRoom}
-              >
-                <source
-                  srcSet={`/images/${r.id}-800.webp 800w, ${r.image} 1536w`}
-                  sizes="(max-width: 700px) 100vw, 96vw"
-                />
-                <img
-                  src={r.image}
-                  alt={r.alt}
-                  width="1536"
-                  height="1024"
-                  fetchPriority={r.id === "living" ? "high" : "auto"}
-                  loading={r.id === "living" ? "eager" : "lazy"}
-                />
-              </picture>
-            ))}
+            {rooms
+              .filter((r) => r.id === activeRoom)
+              .map((r) => (
+                <picture
+                  key={r.id}
+                  className={`hero-picture ${r.id === activeRoom ? "active" : ""}`}
+                  aria-hidden={r.id !== activeRoom}
+                >
+                  <source
+                    srcSet={`/images/${r.id}-800.webp 800w, ${r.image} 1536w`}
+                    sizes="(max-width: 700px) 100vw, 96vw"
+                  />
+                  <img
+                    src={r.image}
+                    alt={r.alt}
+                    width="1536"
+                    height="1024"
+                    fetchPriority={r.id === "living" ? "high" : "auto"}
+                    loading={r.id === "living" ? "eager" : "lazy"}
+                  />
+                </picture>
+              ))}
             <span className="hero-image-caption">SPACES TO CALL YOUR OWN</span>
             <div className="hero-hotspots">
               {activeRoom === "living" ? (
@@ -386,6 +389,12 @@ export default function App() {
             something personal.
           </p>
         </section>
+        <RoomExplorer
+          design={design}
+          onChange={setDesign}
+          onCustomize={() => studio()}
+          onConsult={() => consult("Living room", true)}
+        />
         <Configurator
           design={design}
           onChange={setDesign}

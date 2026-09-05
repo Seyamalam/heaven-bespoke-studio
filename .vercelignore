@@ -1,0 +1,6 @@
+assets/source/
+assets/prompts.json
+docs/
+artifacts/
+.git/
+node_modules/

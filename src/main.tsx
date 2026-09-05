@@ -11,6 +11,7 @@ import "./styles.css";
 import "./styles/studio.css";
 import "./styles/dialog.css";
 import "./styles/material.css";
+import "./styles/room.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

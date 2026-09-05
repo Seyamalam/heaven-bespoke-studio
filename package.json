@@ -15,7 +15,8 @@
     "format:check": "prettier --check src scripts/*.mjs \"*.{json,js,ts,html}\" docs/*.md README.md",
     "assets:optimize": "node scripts/optimize_assets.mjs",
     "assets:materials": "node scripts/render_materials.mjs",
-    "gpu:check": "vgpu check src/shaders/material.wgsl --require-validation"
+    "gpu:check": "vgpu check src/shaders/material.wgsl --require-validation",
+    "assets:models": "node scripts/optimize_models.mjs"
   },
   "repository": {
     "type": "git",
@@ -42,6 +43,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@gltf-transform/core": "^4.5.0",
+    "@gltf-transform/extensions": "^4.5.0",
+    "@gltf-transform/functions": "^4.5.0",
     "@playwright/test": "^1.63.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
@@ -50,6 +54,7 @@
     "eslint": "^10.10.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.6",
+    "meshoptimizer": "^1.2.0",
     "prettier": "^3.9.6",
     "sharp": "^0.35.4",
     "typescript": "^6.0.3",
