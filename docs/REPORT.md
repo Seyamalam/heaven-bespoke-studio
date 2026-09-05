@@ -18,6 +18,8 @@ The current local production preview runs at http://127.0.0.1:4173 while its pro
 
 18 unit tests, lint, TypeScript, and the production build pass. Native vgpu doctor and shader validation pass; all seven GPU-generated textures pass pixel checks. Desktop/tablet/phone-width checks, configuration, material lighting, save/restore, inquiry review, focus restoration, and actual WebGL loss/retry were exercised in Chrome. Production page loading was checked to confirm that the 3D and material-study chunks are absent until requested.
 
+GitHub Actions is currently blocked before job startup by an account billing/spending-limit restriction. The local verification results above are complete; a successful hosted CI run remains pending that account issue.
+
 ## Practical limits
 
 - Generated images, models, and finishes are disclosed as illustrative concepts.

@@ -13,6 +13,12 @@ Tested September 5, 2026 on macOS in Chrome using the real local application. Br
 
 The production build emits a size warning for the on-demand Three.js chunk. It is not part of the initial page load. No Lighthouse score or cross-browser coverage is claimed.
 
+## Hosted CI status
+
+The workflow is configured, but GitHub Actions reports `startup_failure` before creating any jobs. The authenticated run page states that recent account payments failed or the spending limit needs to be increased. This is an account-level runner restriction, not a failed application test. Local checks above passed. Resolve the GitHub billing/spending restriction and rerun the workflow to establish a hosted green run.
+
+Observed run: https://github.com/Seyamalam/heaven-bespoke-studio/actions/runs/33945426747
+
 ## Browser journeys completed
 
 - Desktop, 768 px tablet, 390 px phone, and 360 px phone layouts checked for horizontal overflow; none observed.

@@ -35,6 +35,7 @@
 - [x] Keyboard, no-WebGL fallback, storage failure and inquiry checks.
 - [x] Visual critique and polish.
 - [x] Update documents, push commits, provide preview and repo link.
+- [ ] Resolve GitHub account billing/spending restriction and establish a successful hosted CI run.
 - [ ] Public deployment, screen recording, public social post and Google Form submission (release steps).
 
 ## Commit cadence
