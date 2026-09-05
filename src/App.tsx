@@ -15,6 +15,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
+import { parseSharedRoom } from "./lib/roomPlan";
 import RoomExplorer from "./components/RoomExplorer";
 import Configurator from "./components/Configurator";
 import Consultation from "./components/Consultation";
@@ -89,7 +90,9 @@ const faqs = [
 
 export default function App() {
   const [design, setDesign] = useState<Design>(
-    () => loadDesign() ?? { ...defaultDesign },
+    () =>
+      parseSharedRoom(window.location.hash)?.design ??
+      loadDesign() ?? { ...defaultDesign },
   );
   const [hasSaved, setHasSaved] = useState(() => !!loadDesign());
   const [activeRoom, setActiveRoom] = useState<RoomKey>("living");

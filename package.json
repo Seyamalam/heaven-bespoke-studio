@@ -16,7 +16,8 @@
     "assets:optimize": "node scripts/optimize_assets.mjs",
     "assets:materials": "node scripts/render_materials.mjs",
     "gpu:check": "vgpu check src/shaders/material.wgsl --require-validation",
-    "assets:models": "node scripts/optimize_models.mjs"
+    "assets:models": "node scripts/optimize_models.mjs",
+    "assets:lighting": "node scripts/optimize_lighting.mjs"
   },
   "repository": {
     "type": "git",

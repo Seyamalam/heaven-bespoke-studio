@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import {
@@ -8,10 +8,12 @@ import {
   PlaneGeometry,
   Vector3,
   PCFSoftShadowMap,
+  TextureLoader,
 } from "three";
+import type { Texture } from "three";
 import type { Design, FurnitureKey } from "../lib/design";
-import { furniture, woods } from "../lib/design";
-import { arrangements, wallTones } from "../lib/room";
+
+import { wallTones } from "../lib/room";
 import type { RoomSettings } from "../lib/room";
 import {
   surfaceVertex,
@@ -19,14 +21,18 @@ import {
   rugFragment,
   artworkFragment,
 } from "../lib/roomShaders";
-import { ContextMonitor, FurnitureModel } from "./FurnitureObjects";
+import { ContextMonitor } from "./FurnitureObjects";
+import PlacedFurniture from "./PlacedFurniture";
+import type { Placements, Pose, Widths } from "../lib/roomPlan";
 
 function CameraGuide({
   settings,
   version,
+  arranging,
 }: {
   settings: RoomSettings;
   version: number;
+  arranging: boolean;
 }) {
   const controls = useRef<OrbitControlsImpl>(null);
   const { camera, invalidate, size } = useThree();
@@ -78,6 +84,7 @@ function CameraGuide({
     <OrbitControls
       ref={controls}
       makeDefault
+      enabled={!arranging}
       enableDamping={false}
       enablePan={false}
       minDistance={2.1}
@@ -100,14 +107,22 @@ function RenderActivity() {
   });
   return null;
 }
-function TimberFloor({ settings }: { settings: RoomSettings }) {
+function TimberFloor({
+  settings,
+  lighting,
+}: {
+  settings: RoomSettings;
+  lighting: Texture[];
+}) {
   const uniforms = useMemo(
     () => ({
       tone: { value: new Color("#b89672") },
       daylight: { value: settings.daylight / 100 },
       curtains: { value: settings.curtains ? 1 : 0 },
+      occlusion: { value: lighting[0] },
+      bounce: { value: lighting[1] },
     }),
-    [settings.daylight, settings.curtains],
+    [settings.daylight, settings.curtains, lighting],
   );
   return (
     <>
@@ -134,13 +149,20 @@ function TimberFloor({ settings }: { settings: RoomSettings }) {
     </>
   );
 }
-function Rug({ daylight }: { daylight: number }) {
+function Rug({
+  daylight,
+  occlusion,
+}: {
+  daylight: number;
+  occlusion: Texture;
+}) {
   const uniforms = useMemo(
     () => ({
       tone: { value: new Color("#cdc6b4") },
       daylight: { value: daylight / 100 },
+      occlusion: { value: occlusion },
     }),
-    [daylight],
+    [daylight, occlusion],
   );
   return (
     <>
@@ -247,13 +269,26 @@ function Art({ position }: { position: [number, number, number] }) {
     </group>
   );
 }
-function Architecture({ settings }: { settings: RoomSettings }) {
+function Architecture({
+  settings,
+  lighting,
+}: {
+  settings: RoomSettings;
+  lighting: Texture[];
+}) {
   const wall = wallTones[settings.wall].color;
   return (
     <>
       <mesh position={[0, 1.55, -2.5]} receiveShadow>
         <boxGeometry args={[6.4, 3.1, 0.12]} />
-        <meshStandardMaterial color={wall} roughness={0.94} />
+        <meshStandardMaterial
+          color={wall}
+          roughness={0.94}
+          aoMap={lighting[2]}
+          aoMapIntensity={0.65}
+          lightMap={lighting[3]}
+          lightMapIntensity={0.45 + settings.daylight / 150}
+        />
       </mesh>
       <mesh position={[-3.2, 1.55, -1.95]}>
         <boxGeometry args={[0.12, 3.1, 1.1]} />
@@ -356,13 +391,27 @@ export default function RoomScene({
   viewVersion,
   onSelect,
   onUnavailable,
+  placements,
+  widths,
+  arranging,
+  onMove,
 }: {
   design: Design;
   settings: RoomSettings;
   viewVersion: number;
   onSelect: (key: FurnitureKey) => void;
   onUnavailable: () => void;
+  placements: Placements;
+  widths: Widths;
+  arranging: boolean;
+  onMove: (key: FurnitureKey, pose: Pose) => void;
 }) {
+  const lighting = useLoader(TextureLoader, [
+    "/lighting/floor-ao.webp",
+    "/lighting/floor-bounce.webp",
+    "/lighting/back-wall-ao.webp",
+    "/lighting/back-wall-bounce.webp",
+  ]);
   // Resolve the asset boundary before creating a canvas to avoid a suspend/lost-context cycle.
   const models = useGLTF([
     "/models/sofa.glb",
@@ -376,7 +425,7 @@ export default function RoomScene({
     [],
   );
   const daylight = settings.daylight / 100;
-  const positions = arrangements[settings.layout];
+  const positions = placements;
   return (
     <Canvas
       className="room-canvas"
@@ -419,70 +468,27 @@ export default function RoomScene({
         shadow-normalBias={0.03}
       />
       <directionalLight position={[5, 3, 4]} intensity={0.7} color="#e4ecf4" />
-      <TimberFloor settings={settings} />
-      <Rug daylight={settings.daylight} />
-      <Architecture settings={settings} />
-      {(["sofa", "chair", "table"] as FurnitureKey[]).map((key, i) => {
-        const pieceDesign = {
-          ...design,
-          product: key,
-          width: key === design.product ? design.width : furniture[key].width,
-        };
-        return (
-          <group
-            key={key}
-            position={positions[key].position}
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect(key);
-            }}
-            onPointerOver={(e) => {
-              e.stopPropagation();
-              document.body.style.cursor = "pointer";
-            }}
-            onPointerOut={() => {
-              document.body.style.cursor = "";
-            }}
-          >
-            <FurnitureModel
-              scene={models[i].scene}
-              design={pieceDesign}
-              rotation={positions[key].rotation}
-            />
-            {design.product === key && (
-              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.018, 0]}>
-                <ringGeometry
-                  args={[
-                    key === "sofa" ? 1.32 : 0.61,
-                    key === "sofa" ? 1.34 : 0.63,
-                    64,
-                  ]}
-                />
-                <meshBasicMaterial
-                  color="#b39764"
-                  transparent
-                  opacity={0.65}
-                  depthWrite={false}
-                />
-              </mesh>
-            )}
-          </group>
-        );
-      })}
-      <group position={[0.35, 0.45, 0.45]}>
-        <mesh rotation={[0, 0.15, 0]}>
-          <boxGeometry args={[0.32, 0.035, 0.24]} />
-          <meshStandardMaterial color="#ded8c9" />
-        </mesh>
-        <mesh position={[0.27, 0.065, 0]}>
-          <cylinderGeometry args={[0.055, 0.068, 0.13, 20]} />
-          <meshStandardMaterial
-            color={woods[design.wood].color}
-            roughness={0.9}
-          />
-        </mesh>
-      </group>
-      <CameraGuide settings={settings} version={viewVersion} />
+      <TimberFloor settings={settings} lighting={lighting} />
+      <Rug daylight={settings.daylight} occlusion={lighting[0]} />
+      <Architecture settings={settings} lighting={lighting} />
+      {(["sofa", "chair", "table"] as FurnitureKey[]).map((key, i) => (
+        <PlacedFurniture
+          key={key}
+          piece={key}
+          scene={models[i].scene}
+          design={{ ...design, product: key, width: widths[key] }}
+          pose={positions[key]}
+          arranging={arranging}
+          selected={design.product === key}
+          onSelect={onSelect}
+          onMove={onMove}
+        />
+      ))}
+      <CameraGuide
+        settings={settings}
+        version={viewVersion}
+        arranging={arranging}
+      />
     </Canvas>
   );
 }

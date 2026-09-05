@@ -1,9 +1,10 @@
-import { Component, lazy, Suspense, useState } from "react";
+import { Component, lazy, Suspense, useState, useEffect } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import {
   ArrowUpRight,
   Box,
   Check,
+  Share2,
   LampDesk,
   Maximize2,
   Moon,
@@ -15,6 +16,16 @@ import { fabrics, furniture, selectProduct, woods } from "../lib/design";
 import type { Design, FurnitureKey } from "../lib/design";
 import { defaultRoom, roomViews, wallTones } from "../lib/room";
 import type { RoomSettings, RoomView } from "../lib/room";
+import RoomPlanner from "./RoomPlanner";
+import {
+  copyArrangement,
+  defaultWidths,
+  parseSharedRoom,
+  placePiece,
+  roomLink,
+  pieceKeys,
+} from "../lib/roomPlan";
+import type { Placements, Pose, Widths } from "../lib/roomPlan";
 const RoomScene = lazy(() => import("./RoomScene"));
 class RoomBoundary extends Component<
   { children: ReactNode; fallback: ReactNode },
@@ -41,15 +52,109 @@ export default function RoomExplorer({
 }) {
   const [entered, setEntered] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
-  const [settings, setSettings] = useState<RoomSettings>(defaultRoom);
+  const [initialShared] = useState(() => parseSharedRoom(window.location.hash));
+  const [settings, setSettings] = useState<RoomSettings>(
+    initialShared?.settings ?? defaultRoom,
+  );
+  const [placements, setPlacements] = useState<Placements>(
+    initialShared?.placements ?? copyArrangement("gather"),
+  );
+  const [widths, setWidths] = useState<Widths>(
+    initialShared?.widths ?? defaultWidths,
+  );
+  const [arranging, setArranging] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
+  const [shareStatus, setShareStatus] = useState(
+    initialShared ? "Shared room loaded. Step inside to explore it." : "",
+  );
+  const roomWidths = { ...widths, [design.product]: design.width };
+  const safePlacements = Object.fromEntries(
+    pieceKeys.map((key) => [
+      key,
+      placePiece(
+        key,
+        roomWidths[key],
+        placements[key].position[0],
+        placements[key].position[2],
+        placements[key].rotation,
+      ),
+    ]),
+  ) as Placements;
+  useEffect(() => {
+    function restore() {
+      const shared = parseSharedRoom(window.location.hash);
+      if (!shared) return;
+      setSettings(shared.settings);
+      setPlacements(shared.placements);
+      setWidths(shared.widths);
+      onChange(shared.design);
+      setShareStatus("Shared room loaded. Step inside to explore it.");
+      setShareUrl("");
+      setArranging(false);
+      document.getElementById("room")?.scrollIntoView({ behavior: "instant" });
+    }
+    const frame = requestAnimationFrame(() => {
+      if (initialShared)
+        document
+          .getElementById("room")
+          ?.scrollIntoView({ behavior: "instant" });
+    });
+    window.addEventListener("hashchange", restore);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("hashchange", restore);
+    };
+  }, [onChange, initialShared]);
+  function move(key: FurnitureKey, pose: Pose) {
+    setPlacements((current) => ({
+      ...current,
+      [key]: placePiece(
+        key,
+        roomWidths[key],
+        pose.position[0],
+        pose.position[2],
+        pose.rotation,
+      ),
+    }));
+  }
+  async function share() {
+    try {
+      const url = roomLink(window.location.href, {
+        version: 1,
+        design,
+        settings,
+        placements: safePlacements,
+        widths: roomWidths,
+      });
+      setShareUrl(url);
+      try {
+        await navigator.clipboard.writeText(url);
+        setShareStatus("Room link copied. Your plan is ready to share.");
+      } catch {
+        setShareStatus("Your link is ready. Select and copy it below.");
+      }
+    } catch {
+      setShareStatus(
+        "This room could not be shared. Reset its layout and try again.",
+      );
+    }
+  }
   const [version, setVersion] = useState(0);
   const [retryVersion, setRetryVersion] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [picked, setPicked] = useState(false);
-  const update = (patch: Partial<RoomSettings>) =>
+  const update = (patch: Partial<RoomSettings>) => {
+    if (patch.layout) setPlacements(copyArrangement(patch.layout));
     setSettings((s) => ({ ...s, ...patch }));
+  };
   function select(product: FurnitureKey) {
-    if (product !== design.product) onChange(selectProduct(design, product));
+    if (product !== design.product) {
+      setWidths(roomWidths);
+      onChange({
+        ...selectProduct(design, product),
+        width: roomWidths[product],
+      });
+    }
     setPicked(true);
   }
   const poster = (
@@ -145,6 +250,10 @@ export default function RoomExplorer({
                 <RoomScene
                   design={design}
                   settings={settings}
+                  placements={safePlacements}
+                  widths={roomWidths}
+                  arranging={arranging}
+                  onMove={move}
                   viewVersion={version}
                   onSelect={select}
                   onUnavailable={() => setUnavailable(true)}
@@ -201,7 +310,9 @@ export default function RoomExplorer({
                 ))}
               </div>
               <div className="room-hint">
-                Drag to look around · select a piece to make it yours
+                {arranging
+                  ? "Drag furniture to place it · 5 cm snap"
+                  : "Drag to look around · select a piece to make it yours"}
               </div>
             </>
           )}
@@ -298,6 +409,22 @@ export default function RoomExplorer({
               ))}
             </div>
           </fieldset>
+          <RoomPlanner
+            product={design.product}
+            placements={safePlacements}
+            widths={roomWidths}
+            arranging={arranging}
+            onMove={move}
+            onToggle={() => {
+              const next = !arranging;
+              setArranging(next);
+              if (next) {
+                setEntered(true);
+                update({ view: "top" });
+                setVersion((v) => v + 1);
+              }
+            }}
+          />
           <div className="room-piece-editor">
             <span className="eyebrow">SELECT A PIECE</span>
             <div className="room-segment room-piece-tabs">
@@ -355,6 +482,29 @@ export default function RoomExplorer({
           <button className="button button-dark full-width" onClick={onConsult}>
             Let’s talk about your room <ArrowUpRight size={17} />
           </button>
+          <div className="room-sharing">
+            <button className="text-button" onClick={share}>
+              <Share2 size={15} /> Share this room
+            </button>
+            <p role="status">
+              {shareStatus || "A link to your layout, finishes, and lighting."}
+            </p>
+            {shareUrl && (
+              <label>
+                Room snapshot link
+                <input
+                  aria-label="Room snapshot link"
+                  readOnly
+                  value={shareUrl}
+                  onFocus={(event) => event.currentTarget.select()}
+                />
+                <small>
+                  Copy again after making changes. No personal details are
+                  included.
+                </small>
+              </label>
+            )}
+          </div>
           <div className="room-quality">
             <label>
               View quality{" "}
@@ -373,6 +523,10 @@ export default function RoomExplorer({
               className="text-button"
               onClick={() => {
                 setSettings({ ...defaultRoom });
+                setPlacements(copyArrangement("gather"));
+                setArranging(false);
+                setShareUrl("");
+                setShareStatus("");
                 setVersion((v) => v + 1);
               }}
             >
