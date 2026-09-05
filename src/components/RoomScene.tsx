@@ -33,6 +33,19 @@ const modelPaths = [
 // This module is loaded only on room entry; start geometry alongside light maps.
 useGLTF.preload(modelPaths);
 
+function ReadySignal({ onReady }: { onReady: () => void }) {
+  const scheduled = useRef(false);
+  const frame = useRef(0);
+  useFrame(() => {
+    if (scheduled.current) return;
+    scheduled.current = true;
+    // Signal after the renderer has completed its first frame.
+    frame.current = requestAnimationFrame(onReady);
+  });
+  useEffect(() => () => cancelAnimationFrame(frame.current), []);
+  return null;
+}
+
 function CameraGuide({
   settings,
   version,
@@ -399,6 +412,7 @@ export default function RoomScene({
   viewVersion,
   onSelect,
   onUnavailable,
+  onReady,
   placements,
   widths,
   arranging,
@@ -409,6 +423,7 @@ export default function RoomScene({
   viewVersion: number;
   onSelect: (key: FurnitureKey) => void;
   onUnavailable: () => void;
+  onReady: () => void;
   placements: Placements;
   widths: Widths;
   arranging: boolean;
@@ -451,6 +466,7 @@ export default function RoomScene({
       aria-label="Interactive living room. Choose a camera view or a furniture button below for keyboard control."
     >
       <ContextMonitor onUnavailable={onUnavailable} />
+      <ReadySignal onReady={onReady} />
       {import.meta.env.DEV && <RenderActivity />}
       <ambientLight
         color={daylight < 0.4 ? "#d2dae5" : "#fff4df"}

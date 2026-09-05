@@ -28,12 +28,15 @@ import {
 import type { Placements, Pose, Widths } from "../lib/roomPlan";
 const RoomScene = lazy(() => import("./RoomScene"));
 class RoomBoundary extends Component<
-  { children: ReactNode; fallback: ReactNode },
+  { children: ReactNode; fallback: ReactNode; onError: () => void },
   { failed: boolean }
 > {
   state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
+  }
+  componentDidCatch() {
+    this.props.onError();
   }
   render() {
     return this.state.failed ? this.props.fallback : this.props.children;
@@ -52,6 +55,7 @@ export default function RoomExplorer({
 }) {
   const [entered, setEntered] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
+  const [ready, setReady] = useState(false);
   const [initialShared] = useState(() => parseSharedRoom(window.location.hash));
   const [settings, setSettings] = useState<RoomSettings>(
     initialShared?.settings ?? defaultRoom,
@@ -140,7 +144,6 @@ export default function RoomExplorer({
     }
   }
   const [version, setVersion] = useState(0);
-  const [retryVersion, setRetryVersion] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [picked, setPicked] = useState(false);
   const update = (patch: Partial<RoomSettings>) => {
@@ -171,19 +174,29 @@ export default function RoomExplorer({
     <div className="room-entry">
       {poster}
       <div>
-        <span className="eyebrow">YOUR ROOM IS STILL HERE</span>
-        <h3>A different way to explore.</h3>
+        <span className="eyebrow">3D ROOM UNAVAILABLE</span>
+        <h3>The room couldn’t load.</h3>
         <p>
-          Use the controls to choose finishes, or continue to your consultation.
+          Reload to download the current room and try again. Your layout and
+          finish choices will be kept. This image is a static preview.
         </p>
         <button
           className="button button-light"
           onClick={() => {
-            setUnavailable(false);
-            setRetryVersion((v) => v + 1);
+            // A rejected React.lazy import stays rejected. Remounting its
+            // boundary cannot recover an asset removed by a deployment.
+            const url = roomLink(window.location.href, {
+              version: 1,
+              design,
+              settings,
+              placements: safePlacements,
+              widths: roomWidths,
+            });
+            window.history.replaceState(null, "", url);
+            window.location.reload();
           }}
         >
-          Try the room again <RotateCcw size={16} />
+          Reload room <RotateCcw size={16} />
         </button>
       </div>
     </div>
@@ -191,6 +204,15 @@ export default function RoomExplorer({
   return (
     <section
       id="room"
+      data-render-state={
+        unavailable
+          ? "failed"
+          : entered && ready
+            ? "ready"
+            : entered
+              ? "loading"
+              : "idle"
+      }
       className={`room-experience section-pad ${expanded ? "room-expanded" : ""} ${arranging ? "room-arranging" : ""}`}
     >
       <div className="section-heading">
@@ -222,7 +244,10 @@ export default function RoomExplorer({
                 </h3>
                 <button
                   className="button button-light"
-                  onClick={() => setEntered(true)}
+                  onClick={() => {
+                    setReady(false);
+                    setEntered(true);
+                  }}
                 >
                   <Box size={18} /> Step inside the room{" "}
                   <ArrowUpRight size={17} />
@@ -233,7 +258,14 @@ export default function RoomExplorer({
           ) : unavailable ? (
             fallback
           ) : (
-            <RoomBoundary key={retryVersion} fallback={fallback}>
+            <RoomBoundary
+              fallback={fallback}
+              onError={() => {
+                setUnavailable(true);
+                setReady(false);
+                setArranging(false);
+              }}
+            >
               <Suspense
                 fallback={
                   <div className="room-entry">
@@ -256,12 +288,17 @@ export default function RoomExplorer({
                   onMove={move}
                   viewVersion={version}
                   onSelect={select}
-                  onUnavailable={() => setUnavailable(true)}
+                  onReady={() => setReady(true)}
+                  onUnavailable={() => {
+                    setUnavailable(true);
+                    setReady(false);
+                    setArranging(false);
+                  }}
                 />
               </Suspense>
             </RoomBoundary>
           )}
-          {entered && (
+          {entered && ready && !unavailable && (
             <>
               <div className="room-scene-top">
                 <span>
@@ -284,6 +321,7 @@ export default function RoomExplorer({
                     aria-label="Leave interactive room"
                     onClick={() => {
                       setEntered(false);
+                      setReady(false);
                       setExpanded(false);
                     }}
                   >
@@ -322,7 +360,7 @@ export default function RoomExplorer({
             <span className="eyebrow">MAKE IT FEEL LIKE YOU</span>
             <h3>A room, your way.</h3>
           </div>
-          <fieldset className="room-field">
+          <fieldset className="room-field" disabled={unavailable}>
             <legend>
               Make space for{" "}
               <span>
@@ -346,7 +384,7 @@ export default function RoomExplorer({
               </button>
             </div>
           </fieldset>
-          <fieldset className="room-field">
+          <fieldset className="room-field" disabled={unavailable}>
             <legend>
               Set the mood{" "}
               <span>
@@ -384,7 +422,7 @@ export default function RoomExplorer({
               </button>
             </div>
           </fieldset>
-          <fieldset className="room-field">
+          <fieldset className="room-field" disabled={unavailable}>
             <legend>
               A backdrop to your life{" "}
               <span>{wallTones[settings.wall].name}</span>
@@ -409,22 +447,24 @@ export default function RoomExplorer({
               ))}
             </div>
           </fieldset>
-          <RoomPlanner
-            product={design.product}
-            placements={safePlacements}
-            widths={roomWidths}
-            arranging={arranging}
-            onMove={move}
-            onToggle={() => {
-              const next = !arranging;
-              setArranging(next);
-              if (next) {
-                setEntered(true);
-                update({ view: "top" });
-                setVersion((v) => v + 1);
-              }
-            }}
-          />
+          {!unavailable && (
+            <RoomPlanner
+              product={design.product}
+              placements={safePlacements}
+              widths={roomWidths}
+              arranging={arranging}
+              onMove={move}
+              onToggle={() => {
+                const next = !arranging;
+                setArranging(next);
+                if (next) {
+                  setEntered(true);
+                  update({ view: "top" });
+                  setVersion((v) => v + 1);
+                }
+              }}
+            />
+          )}
           <div className="room-piece-editor">
             <span className="eyebrow">SELECT A PIECE</span>
             <div className="room-segment room-piece-tabs">
@@ -527,6 +567,7 @@ export default function RoomExplorer({
               View quality{" "}
               <select
                 aria-label="Room render quality"
+                disabled={unavailable}
                 value={settings.quality}
                 onChange={(e) =>
                   update({ quality: e.target.value as RoomSettings["quality"] })

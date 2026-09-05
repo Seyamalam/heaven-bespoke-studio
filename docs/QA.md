@@ -65,3 +65,13 @@ A model suspended inside a newly mounted R3F Canvas reproducibly lost its WebGL 
 - Mobile at 390 px: no horizontal overflow; position controls, rotated measurements, and consultation controls usable.
 - Consultation included a valid room link; the fragment contained no test name. Opting out removed the room link. Nothing was sent.
 - Four baked textures passed variation/nonblack checks. Browser rendering showed no shader errors and no console errors in the tested session.
+
+## Recovery after deployment
+
+The user’s open Chrome tab still ran `index-DaOTneA0.js`. Opening the room requested the removed `RoomScene-CeIH9J7l.js` module (HTTP 404). The error boundary displayed a static poster while leaving camera controls active; retrying reused React.lazy’s rejected import and failed again. Reloading the same tab fetched the current release and rendered the actual room.
+
+The failure UI now explicitly identifies an unavailable 3D room and static preview. Reload room preserves the complete room snapshot in the URL and reloads the document, clearing the rejected import. Camera controls appear only after the first rendered frame; lighting and layout controls are disabled during failure. HTML responses revalidate with `Cache-Control: no-cache`.
+
+`node scripts/check_room_recovery.mjs` tests the production build at localhost:4173. It returns 404 for the room module, checks the explicit failure and disabled controls, restores the module, reloads, and verifies both a ready canvas and the retained Deep teal finish. It then forces a WebGL context loss and verifies the controls become unavailable again. The test failed before the fix and passed afterward. Lint, formatting, build, and all 39 unit tests also pass.
+
+Vite documents the underlying deployment behavior at https://vite.dev/guide/build.html#load-error-handling.
