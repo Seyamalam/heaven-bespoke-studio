@@ -51,8 +51,16 @@ The production 3D chunk is approximately 976 kB minified / 262 kB gzip, loaded o
 
 ## Room extension and Vercel
 
-`RoomExplorer.tsx` owns room-only state and accessible controls. `RoomScene.tsx` is deferred until entry, resolves all three GLBs before mounting Canvas, and composes procedural architecture with shared `FurnitureObjects.tsx` rendering. `roomShaders.ts` holds three original GLSL surface shaders. `room.ts` defines curated arrangements, wall tones, and view labels. Furniture finishes and the selected piece remain in the application `Design` state. Room arrangements, lighting, and wall colors are exploratory and are not saved or included in the inquiry.
+`RoomExplorer.tsx` owns room-only state and accessible controls. `RoomScene.tsx` is deferred until entry, resolves all three GLBs before mounting Canvas, and composes procedural architecture with shared `FurnitureObjects.tsx` rendering. `roomShaders.ts` holds three original GLSL surface shaders. `room.ts` defines curated arrangements, wall tones, and view labels. Furniture finishes and the selected piece remain in the application `Design` state. Room arrangements, lighting, wall colors, per-piece widths, and poses are portable through validated URL-fragment snapshots. The consultation can include that snapshot link with an explicit opt-out.
 
 Only the active editorial hero image is mounted. The two 3D experiences share one bundled rendering dependency; the base application grows to approximately 75 kB gzip while the room scene itself adds approximately 4 kB on request. The combined GLBs shrink to 577 kB through material-compatible mesh joining and Meshopt compression. See `ROOM-EXPERIENCE.md` for measured numbers.
 
 `vercel.json` specifies Vite, `npm run build`, and `dist`. `.vercelignore` excludes editable asset sources and documentation from deployment upload. Local Vercel linking and authentication files are gitignored. Production is available at https://heaven-bespoke-studio.vercel.app.
+
+## Portable plans and lighting
+
+`roomPlan.ts` validates versioned snapshots, calculates rotated footprints, snaps/clamps placements, measures edge clearances, and detects overlaps using separating axes. `RoomPlanner.tsx` exposes equivalent HTML controls; `PlacedFurniture.tsx` handles ground-plane pointer capture. Orbiting is disabled during Arrange mode. Widths for all three pieces are retained while switching selection.
+
+Snapshots contain only typed furniture and room preferences, never inquiry details. Fresh link visits restore state without automatically loading GPU modules. In-page hash changes can load a different plan. `Consultation` can append the room link to its editable message when the visitor includes it.
+
+Blender Cycles generates static architectural occlusion and indirect-light maps. The shader floor/rug sample floor occlusion; the rear-wall material uses AO and a light map. Geometry and textures are requested together at room entry. Furniture is excluded from bakes, so moved pieces retain only dynamic shadows.

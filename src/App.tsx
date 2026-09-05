@@ -100,13 +100,18 @@ export default function App() {
   const [consultation, setConsultation] = useState<{
     category: string;
     includeDesign: boolean;
+    planUrl?: string;
   } | null>(null);
   const [activeCraft, setActiveCraft] = useState(0);
   const menuButton = useRef<HTMLButtonElement>(null);
   const room = rooms.find((r) => r.id === activeRoom)!;
-  function consult(category: string = room.category, includeDesign = false) {
+  function consult(
+    category: string = room.category,
+    includeDesign = false,
+    planUrl?: string,
+  ) {
     setMenuOpen(false);
-    setConsultation({ category, includeDesign });
+    setConsultation({ category, includeDesign, planUrl });
   }
   function studio(product?: FurnitureKey) {
     if (product) setDesign((current) => selectProduct(current, product));
@@ -396,7 +401,7 @@ export default function App() {
           design={design}
           onChange={setDesign}
           onCustomize={() => studio()}
-          onConsult={() => consult("Living room", true)}
+          onConsult={(planUrl) => consult("Living room", true, planUrl)}
         />
         <Configurator
           design={design}

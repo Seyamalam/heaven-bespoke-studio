@@ -48,3 +48,12 @@ Commit meaningful working milestones: docs → scaffold → generated assets →
 - [x] Room architecture, selectable furniture, camera presets, arrangements, wall tones, lighting, and curtains.
 - [x] Shared rendering, demand-driven frames, mobile camera fitting, quality controls, and model compression.
 - [x] Original floor, rug, and artwork shaders, verified through the real browser renderer.
+
+## Room planning and sharing
+
+- [x] Versioned, validated, portable room links without personal inquiry data.
+- [x] Drag placement, 5 cm snapping, rotated room bounds, keyboard controls, edge measurements, and overlap feedback.
+- [x] Per-piece widths retained in room state and links.
+- [x] Optional room-plan link in the consultation message.
+- [x] Blender Cycles occlusion/bounce bakes, compressed delivery, and reproducible source.
+- [x] Desktop pointer journey, mobile layout, fresh-page restore, and inquiry opt-out verified.

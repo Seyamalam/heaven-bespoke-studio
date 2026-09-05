@@ -14,11 +14,13 @@ export default function Consultation({
   category,
   includeDesign,
   onClose,
+  planUrl,
 }: {
   design: Design;
   category: string;
   includeDesign: boolean;
   onClose: () => void;
+  planUrl?: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -30,6 +32,7 @@ export default function Consultation({
     notes: "",
     includeDesign,
   });
+  const [includeRoom, setIncludeRoom] = useState(!!planUrl);
   const [message, setMessage] = useState("");
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
@@ -110,7 +113,12 @@ export default function Consultation({
           <form
             onSubmit={(event) => {
               event.preventDefault();
-              setMessage(buildInquiry(design, inquiry));
+              setMessage(
+                buildInquiry(design, inquiry) +
+                  (includeRoom && planUrl
+                    ? `\n\nMy room layout and lighting: ${planUrl}`
+                    : ""),
+              );
               setStep("review");
               heading.current?.focus();
             }}
@@ -180,6 +188,21 @@ export default function Consultation({
                 </small>
               </span>
             </label>
+            {planUrl && (
+              <label className="include-design">
+                <input
+                  type="checkbox"
+                  checked={includeRoom}
+                  onChange={(e) => setIncludeRoom(e.target.checked)}
+                />
+                <span>
+                  Include my room plan
+                  <small>
+                    A link with furniture positions, finishes, and lighting.
+                  </small>
+                </span>
+              </label>
+            )}
             <button className="button button-dark full-width" type="submit">
               Review your inquiry <ArrowUpRight size={18} />
             </button>

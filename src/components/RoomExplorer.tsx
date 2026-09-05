@@ -48,7 +48,7 @@ export default function RoomExplorer({
   design: Design;
   onChange: (d: Design) => void;
   onCustomize: () => void;
-  onConsult: () => void;
+  onConsult: (planUrl?: string) => void;
 }) {
   const [entered, setEntered] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
@@ -191,7 +191,7 @@ export default function RoomExplorer({
   return (
     <section
       id="room"
-      className={`room-experience section-pad ${expanded ? "room-expanded" : ""}`}
+      className={`room-experience section-pad ${expanded ? "room-expanded" : ""} ${arranging ? "room-arranging" : ""}`}
     >
       <div className="section-heading">
         <div>
@@ -479,7 +479,24 @@ export default function RoomExplorer({
               Fine-tune this piece <ArrowUpRight size={15} />
             </button>
           </div>
-          <button className="button button-dark full-width" onClick={onConsult}>
+          <button
+            className="button button-dark full-width"
+            onClick={() => {
+              try {
+                onConsult(
+                  roomLink(window.location.href, {
+                    version: 1,
+                    design,
+                    settings,
+                    placements: safePlacements,
+                    widths: roomWidths,
+                  }),
+                );
+              } catch {
+                onConsult();
+              }
+            }}
+          >
             Let’s talk about your room <ArrowUpRight size={17} />
           </button>
           <div className="room-sharing">

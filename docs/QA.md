@@ -6,7 +6,7 @@ Tested September 5, 2026 on macOS in Chrome using the real local application. Br
 
 - ESLint: passed.
 - TypeScript + Vite production build: passed.
-- Vitest: 18 tests passed, covering saved-state validation, unsafe/corrupt data, width boundaries, unavailable storage, and inquiry serialization. GPU lifecycle tests cover unavailable adapters and closing the dialog before initialization resolves or rejects.
+- Vitest: 39 tests passed, covering saved-state validation, unsafe/corrupt data, width boundaries, unavailable storage, and inquiry serialization. GPU lifecycle tests cover unavailable adapters and closing the dialog before initialization resolves or rejects.
 - `vgpu doctor`: native Metal GPU initialized and rendered successfully.
 - `vgpu check src/shaders/material.wgsl --require-validation`: passed with no diagnostics.
 - Seven material outputs passed GPU pixel assertions for opacity, surface variation, and relighting response.
@@ -55,3 +55,13 @@ A model suspended inside a newly mounted R3F Canvas reproducibly lost its WebGL 
 - Vercel production build succeeded independently of the GitHub Actions billing restriction. Live URL: https://heaven-bespoke-studio.vercel.app.
 - Public end-to-end checks: entry loads the room only on request; the overhead camera works; forced WebGL loss offers retry and recovers with a healthy context; the room-to-studio action and live vgpu material dialog work on the production domain.
 - Consultation handoff verified with a selected 84 cm Pause chair in Deep teal. The editable WhatsApp message contains the matching design and business number. Nothing was sent.
+
+## Planning release verification
+
+- Unit coverage now includes portable snapshot round-trips, excluded personal fields, malformed/oversized/versioned data, inconsistent widths, rotated footprint clamping, 5 cm snapping, overlap detection, and immutable presets.
+- Real pointer drag moved the chair; position and clearance labels updated. Keyboard rotation and position sliders also updated the scene.
+- Shared room restored chair position, rotation, and Deep teal finish. A full reload of the shared URL had zero room canvases until explicit entry.
+- A chair resized to 100 cm retained its width after switching to sofa and back.
+- Mobile at 390 px: no horizontal overflow; position controls, rotated measurements, and consultation controls usable.
+- Consultation included a valid room link; the fragment contained no test name. Opting out removed the room link. Nothing was sent.
+- Four baked textures passed variation/nonblack checks. Browser rendering showed no shader errors and no console errors in the tested session.

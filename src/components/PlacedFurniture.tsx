@@ -29,7 +29,11 @@ export default function PlacedFurniture({
   function end(event: ThreeEvent<PointerEvent>) {
     if (!drag.current) return;
     event.stopPropagation();
-    (event.target as HTMLElement).releasePointerCapture(event.pointerId);
+    try {
+      (event.target as HTMLElement).releasePointerCapture(event.pointerId);
+    } catch {
+      /* A canceled browser pointer may already have released capture. */
+    }
     drag.current = null;
     document.body.style.cursor = arranging ? "grab" : "";
   }
@@ -73,6 +77,10 @@ export default function PlacedFurniture({
       }}
       onPointerUp={end}
       onPointerCancel={end}
+      onLostPointerCapture={() => {
+        drag.current = null;
+        document.body.style.cursor = "";
+      }}
     >
       <FurnitureModel scene={scene} design={design} rotation={pose.rotation} />
       {selected && (

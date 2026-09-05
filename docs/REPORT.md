@@ -16,7 +16,7 @@ The current local production preview runs at http://127.0.0.1:4173 while its pro
 
 ## Evidence
 
-18 unit tests, lint, TypeScript, and the production build pass. Native vgpu doctor and shader validation pass; all seven GPU-generated textures pass pixel checks. Desktop/tablet/phone-width checks, configuration, material lighting, save/restore, inquiry review, focus restoration, and actual WebGL loss/retry were exercised in Chrome. Production page loading was checked to confirm that the 3D and material-study chunks are absent until requested.
+39 unit tests, lint, TypeScript, and the production build pass. Native vgpu doctor and shader validation pass; all seven GPU-generated textures pass pixel checks. Desktop/tablet/phone-width checks, configuration, material lighting, save/restore, inquiry review, focus restoration, and actual WebGL loss/retry were exercised in Chrome. Production page loading was checked to confirm that the 3D and material-study chunks are absent until requested.
 
 GitHub Actions is currently blocked before job startup by an account billing/spending-limit restriction. The local verification results above are complete; a successful hosted CI run remains pending that account issue.
 
@@ -37,3 +37,7 @@ Test the public Vercel URL on real phones, record the 60–90 second interaction
 The follow-up release adds a complete interactive cutaway room with furniture selection, arrangements, camera transitions, wall tones, curtains, day/evening lighting, and a floor lamp. Three architectural shaders complement the existing vgpu material study. Shared model rendering and Meshopt compression reduce furniture delivery by 56% and primitive count by 91%. The room stops rendering when idle; its scene module adds approximately 4 kB gzip to the existing deferred 3D runtime.
 
 Live site: https://heaven-bespoke-studio.vercel.app. Vercel is linked to the GitHub repository. Source assets and local authentication metadata are excluded from deployment upload. See `ROOM-EXPERIENCE.md` for design and performance details.
+
+## Room planning release
+
+Shareable room links, furniture dragging with measurements, per-piece widths, and Blender-baked architectural lighting are implemented. Room links restore finishes, layout, sizes, and mood without personal details. Consultation can carry the plan link with a visitor-controlled checkbox. Keyboard controls complement dragging; collisions produce a visible overlap warning. Four lighting textures add about 83 kB on room entry. See `ROOM-PLANNING.md` for provenance, architecture, and verification.

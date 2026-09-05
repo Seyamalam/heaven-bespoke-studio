@@ -63,6 +63,25 @@ describe("room links", () => {
     expect(parseSharedRoom("#room=" + btoa(JSON.stringify(s)))).toBeNull();
   });
 });
+it("preserves widths for pieces other than the selected one", () => {
+  const s = snapshot();
+  s.widths.chair = 96;
+  const restored = parseSharedRoom(
+    new URL(roomLink("https://example.com", s)).hash,
+  );
+  expect(restored?.widths).toEqual({ sofa: 240, chair: 96, table: 120 });
+});
+it.each(["daylight", "lamp", "width", "elevation"])(
+  "rejects invalid %s in a shared plan",
+  (field) => {
+    const s = snapshot();
+    if (field === "daylight") s.settings.daylight = 1000;
+    if (field === "lamp") Object.assign(s.settings, { lamp: "yes" });
+    if (field === "width") s.widths.table = 0;
+    if (field === "elevation") s.placements.chair.position[1] = 9;
+    expect(parseSharedRoom("#room=" + btoa(JSON.stringify(s)))).toBeNull();
+  },
+);
 describe("placement and measurements", () => {
   it("snaps the ground position to five centimeters", () =>
     expect(placePiece("table", 120, 0.123, 0.876, 0).position).toEqual([

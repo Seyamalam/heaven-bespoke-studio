@@ -25,6 +25,14 @@ import { ContextMonitor } from "./FurnitureObjects";
 import PlacedFurniture from "./PlacedFurniture";
 import type { Placements, Pose, Widths } from "../lib/roomPlan";
 
+const modelPaths = [
+  "/models/sofa.glb",
+  "/models/chair.glb",
+  "/models/table.glb",
+];
+// This module is loaded only on room entry; start geometry alongside light maps.
+useGLTF.preload(modelPaths);
+
 function CameraGuide({
   settings,
   version,
@@ -413,11 +421,7 @@ export default function RoomScene({
     "/lighting/back-wall-bounce.webp",
   ]);
   // Resolve the asset boundary before creating a canvas to avoid a suspend/lost-context cycle.
-  const models = useGLTF([
-    "/models/sofa.glb",
-    "/models/chair.glb",
-    "/models/table.glb",
-  ]);
+  const models = useGLTF(modelPaths);
   useEffect(
     () => () => {
       document.body.style.cursor = "";

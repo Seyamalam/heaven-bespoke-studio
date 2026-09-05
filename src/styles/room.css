@@ -631,3 +631,16 @@
     min-height: 44px;
   }
 }
+.room-arranging .room-camera-bar {
+  display: none;
+}
+@media (max-width: 760px) {
+  .placement-tools input {
+    scroll-margin-top: 385px;
+    scroll-margin-bottom: 100px;
+  }
+  .room-sharing input {
+    scroll-margin-top: 385px;
+    scroll-margin-bottom: 100px;
+  }
+}

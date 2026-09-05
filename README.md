@@ -23,6 +23,9 @@ No API keys or backend are needed. `dist/` can be deployed to a static host. The
 ## What works
 
 - Interactive architectural room with selectable furniture, camera views, arrangements, wall tones, curtains, lighting, and quality controls.
+- Drag-to-place furniture, keyboard position/rotation controls, approximate edge clearances, overlap feedback, and per-piece widths.
+- Shareable room snapshot links that restore layout, finishes, widths, and mood. Room links can be included in the consultation.
+- Blender Cycles ambient-occlusion and indirect-light bakes for the floor and rear wall; furniture shadows remain dynamic.
 
 - Living, bedroom, and dining exploration with original concept imagery.
 - Sofa, lounge chair, and coffee table in an on-demand 3D studio.
@@ -44,6 +47,7 @@ npx vgpu doctor
 npm run gpu:check
 npm run assets:materials
 npm run assets:models
+npm run assets:lighting
 npm run assets:optimize
 ```
 
@@ -61,6 +65,7 @@ npm run assets:optimize
 - [Design direction](docs/DESIGN.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Interactive room and performance measurements](docs/ROOM-EXPERIENCE.md)
+- [Room planning, sharing, and baked lighting](docs/ROOM-PLANNING.md)
 - [Implementation checklist](docs/TODO.md)
 - [Asset register](docs/ASSETS.md)
 - [vgpu opportunity and implementation](docs/VGPU.md)
@@ -74,3 +79,5 @@ npm run assets:optimize
 - [Company brief](https://docs.google.com/document/d/1Acf_Jez9Sw0FamAvBcbm9PgqdJs52ivX1GkOK1a0EuQ/edit)
 
 Generated interiors and furniture models are illustrative design concepts. No model is represented as a verified Heaven product. Business claims are limited to the company brief. This is a competition concept, not the official Heaven website. Personal inquiry details are not persisted; visitors choose whether to send the prepared message in WhatsApp.
+
+To regenerate architectural lighting, run Blender with `--background --python-exit-code 1 --python scripts/bake_room.py`, then `npm run assets:lighting`. Four optimized lighting textures are loaded only with the room. The source `.blend` and PNG maps are retained under `assets/source/lighting/`.

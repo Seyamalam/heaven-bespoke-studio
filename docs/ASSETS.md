@@ -33,3 +33,7 @@ The main 1536 px living/bedroom/dining/material images are approximately 266/229
 ## Room extension
 
 Original procedural room architecture is in `RoomScene.tsx`: floor/base, walls, window frame, corrugated curtain geometry, planter/foliage, lamp, framed artwork, and tabletop accents. The additional art, woven rug, and timber/window-light patterns are generated directly by GLSL shaders in `roomShaders.ts`; they require no downloaded textures. Furniture GLBs are now optimized to approximately 125/69/383 kB while editable Blender and uncompressed GLB sources remain available. Run Blender, then `npm run assets:models`, then `npm run assets:optimize` when regenerating.
+
+## Architectural light maps
+
+`scripts/bake_room.py` creates an original static room shell and bakes floor/rear-wall ambient occlusion and indirect diffuse light with Blender Cycles. `assets/source/lighting/architectural-lighting.blend` and four source PNGs retain the editable bake. `scripts/optimize_lighting.mjs` verifies image variation, gently filters sampling noise, and creates four WebPs in `public/lighting/` (83,074 bytes combined). The movable furniture is not included in the bake. These data textures complement real-time furniture shadows and the input-driven sunlight shader.
