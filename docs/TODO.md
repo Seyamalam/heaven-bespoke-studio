@@ -36,8 +36,15 @@
 - [x] Visual critique and polish.
 - [x] Update documents, push commits, provide preview and repo link.
 - [ ] Resolve GitHub account billing/spending restriction and establish a successful hosted CI run.
-- [ ] Public deployment, screen recording, public social post and Google Form submission (release steps).
+- [x] Public Vercel deployment connected to GitHub.
+- [ ] Screen recording, public social post and Google Form submission (release steps).
 
 ## Commit cadence
 
 Commit meaningful working milestones: docs → scaffold → generated assets → editorial experience → configuration/inquiry → verification/polish. Push checkpoints to remote. Do not commit secrets, caches, or test output.
+
+## Interactive room extension
+
+- [x] Room architecture, selectable furniture, camera presets, arrangements, wall tones, lighting, and curtains.
+- [x] Shared rendering, demand-driven frames, mobile camera fitting, quality controls, and model compression.
+- [x] Original floor, rug, and artwork shaders, verified through the real browser renderer.

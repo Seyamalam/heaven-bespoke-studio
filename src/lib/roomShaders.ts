@@ -20,12 +20,12 @@ export const floorFragment = `
     vec3 wood = tone * (0.76 + variation + grain) * mix(0.7, 1.0, seam);
     vec2 lightUv = vUv + vec2((vUv.y - 0.5) * 0.38, 0.0);
     lightUv.x -= (daylight - 0.5) * 0.24;
-    float patch = smoothstep(0.12, 0.17, lightUv.x) * (1.0 - smoothstep(0.78, 0.84, lightUv.x));
-    patch *= smoothstep(0.17, 0.22, lightUv.y) * (1.0 - smoothstep(0.81, 0.86, lightUv.y));
+    float sunWindow = smoothstep(0.12, 0.17, lightUv.x) * (1.0 - smoothstep(0.78, 0.84, lightUv.x));
+    sunWindow *= smoothstep(0.17, 0.22, lightUv.y) * (1.0 - smoothstep(0.81, 0.86, lightUv.y));
     float bars = smoothstep(0.02, 0.05, abs(fract(lightUv.x * 5.0) - 0.5));
     float crossbar = smoothstep(0.015, 0.035, abs(lightUv.y - 0.52));
     vec3 lightColor = mix(vec3(1.0,0.73,0.46), vec3(1.0,0.95,0.79), daylight);
-    vec3 lit = wood * mix(0.44, 1.15, daylight) + lightColor * patch * bars * crossbar * daylight * mix(0.34, 0.18, curtains);
+    vec3 lit = wood * mix(0.44, 1.15, daylight) + lightColor * sunWindow * bars * crossbar * daylight * mix(0.34, 0.18, curtains);
     float edge = smoothstep(0.0, 0.22, vUv.y) * smoothstep(0.0,0.12,vUv.x);
     gl_FragColor = vec4(lit * mix(0.76,1.0,edge), 1.0);
     #include <tonemapping_fragment>

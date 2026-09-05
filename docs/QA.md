@@ -40,7 +40,16 @@ A model suspended inside a newly mounted R3F Canvas reproducibly lost its WebGL 
 
 ## Remaining release checks
 
-- Verify the deployed public URL and its HTTPS asset paths.
+- [x] Public Vercel URL and GLB asset respond with HTTP 200 without authentication.
 - Run the same journey on a physical iPhone/Safari and a midrange Android device. Current phone checks are resized Chrome views.
 - Confirm production social/contact links and opening hours with the brand if supplied; the page invites visitors to call ahead.
 - Record the real screen interaction and complete the hackathon release steps in `SUBMISSION.md`.
+
+## Interactive room extension
+
+- Original room architecture and all optimized furniture render in Chrome with a healthy WebGL context.
+- Mobile overview framing was adjusted to keep the complete cutaway inside the canvas. No horizontal overflow at 390 px.
+- Camera presets, day/evening slider, floor lamp, and curtains were exercised. The sunlit floor shader was verified after correcting a reserved GLSL identifier. Browser shader diagnostics report no compilation errors.
+- Idle rendering verified: the development canvas frame counter remained at 145 across separate observations more than 30 seconds apart after the camera settled. There is no continuous room animation loop.
+- Geometry optimization round-trip checks preserve material names and model bounds within 2 mm; total delivery falls from 1,302,092 to 576,556 bytes and primitive count from 89 to 8.
+- Vercel production build succeeded independently of the GitHub Actions billing restriction. Live URL: https://heaven-bespoke-studio.vercel.app.

@@ -43,8 +43,14 @@ function CameraGuide({
     const shot = presets[settings.view];
     position.current.set(shot.p[0], shot.p[1], shot.p[2]);
     if (size.width < 600 && settings.view === "overview")
-      position.current.multiplyScalar(1.16);
+      position.current.multiplyScalar(
+        Math.max(1.15, 0.92 / (size.width / size.height)),
+      );
     target.current.set(shot.t[0], shot.t[1], shot.t[2]);
+    // Keep the destination inside the orbit limit, including tall phone views.
+    if (position.current.distanceTo(target.current) > 30) {
+      position.current.sub(target.current).setLength(30).add(target.current);
+    }
     if (
       window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
       controls.current
@@ -54,7 +60,7 @@ function CameraGuide({
       controls.current.update();
     } else moving.current = true;
     invalidate();
-  }, [settings.view, version, camera, invalidate, size.width]);
+  }, [settings.view, version, camera, invalidate, size.width, size.height]);
   useFrame((_, delta) => {
     if (!moving.current || !controls.current) return;
     const factor = 1 - Math.exp(-6 * Math.min(delta, 0.1));
@@ -75,7 +81,7 @@ function CameraGuide({
       enableDamping={false}
       enablePan={false}
       minDistance={2.1}
-      maxDistance={17}
+      maxDistance={32}
       minPolarAngle={0.08}
       maxPolarAngle={Math.PI / 2.08}
       minAzimuthAngle={-0.7}
@@ -85,6 +91,14 @@ function CameraGuide({
       }}
     />
   );
+}
+function RenderActivity() {
+  const gl = useThree((state) => state.gl);
+  const count = useRef(0);
+  useFrame(() => {
+    gl.domElement.setAttribute("data-render-frames", String(++count.current));
+  });
+  return null;
 }
 function TimberFloor({ settings }: { settings: RoomSettings }) {
   const uniforms = useMemo(
@@ -366,6 +380,15 @@ export default function RoomScene({
   return (
     <Canvas
       className="room-canvas"
+      onCreated={({ gl }) => {
+        if (import.meta.env.DEV)
+          gl.debug.onShaderError = (context, _program, vertex, fragment) => {
+            gl.domElement.dataset.shaderError = [
+              context.getShaderInfoLog(vertex),
+              context.getShaderInfoLog(fragment),
+            ].join("\n");
+          };
+      }}
       frameloop="demand"
       dpr={settings.quality === "detail" ? [1, 1.75] : [1, 1.15]}
       shadows={{ type: PCFSoftShadowMap }}
@@ -375,6 +398,7 @@ export default function RoomScene({
       aria-label="Interactive living room. Choose a camera view or a furniture button below for keyboard control."
     >
       <ContextMonitor onUnavailable={onUnavailable} />
+      {import.meta.env.DEV && <RenderActivity />}
       <ambientLight
         color={daylight < 0.4 ? "#d2dae5" : "#fff4df"}
         intensity={0.35 + daylight * 0.65}

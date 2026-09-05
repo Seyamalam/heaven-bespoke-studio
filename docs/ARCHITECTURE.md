@@ -48,3 +48,11 @@ The canvas surface must be rendered within `frame(gpu, callback)`. Uniform chang
 Resolve `useGLTF` in `FurnitureScene` before mounting the R3F canvas. Suspending the model inside a newly created canvas caused reproducible context loss in the tested browser; moving the asset boundary outside the canvas resolved it. The viewer listens for context loss, shows the poster, preserves choices, and offers a fresh canvas on retry.
 
 The production 3D chunk is approximately 976 kB minified / 262 kB gzip, loaded only on request. The base application is approximately 230 kB / 73 kB gzip; the material study is a separate approximately 139 kB / 45 kB gzip chunk. Vite's large-chunk warning is retained and documented rather than hidden.
+
+## Room extension and Vercel
+
+`RoomExplorer.tsx` owns room-only state and accessible controls. `RoomScene.tsx` is deferred until entry, resolves all three GLBs before mounting Canvas, and composes procedural architecture with shared `FurnitureObjects.tsx` rendering. `roomShaders.ts` holds three original GLSL surface shaders. `room.ts` defines curated arrangements, wall tones, and view labels. Furniture finishes and the selected piece remain in the application `Design` state. Room arrangements, lighting, and wall colors are exploratory and are not saved or included in the inquiry.
+
+Only the active editorial hero image is mounted. The two 3D experiences share one bundled rendering dependency; the base application grows to approximately 75 kB gzip while the room scene itself adds approximately 4 kB on request. The combined GLBs shrink to 577 kB through material-compatible mesh joining and Meshopt compression. See `ROOM-EXPERIENCE.md` for measured numbers.
+
+`vercel.json` specifies Vite, `npm run build`, and `dist`. `.vercelignore` excludes editable asset sources and documentation from deployment upload. Local Vercel linking and authentication files are gitignored. Production is available at https://heaven-bespoke-studio.vercel.app.

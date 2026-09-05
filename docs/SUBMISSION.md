@@ -10,13 +10,15 @@ Source: https://www.racdox.com/hackathon, read September 5, 2026.
 - Submit the Google Form linked from the hackathon page and join WhatsApp for updates.
 - Winners announced September 8. Published terms say Heaven receives full ownership of the winning design/code for its use.
 
+Public project URL: https://heaven-bespoke-studio.vercel.app
+
 ## Suggested recording
 
 0–12s: hero and room switching.
 
-12–30s: choose furniture, load 3D, rotate, and change upholstery/wood/width.
+12–30s: enter the interactive room, change the camera, select furniture, and move from daylight to evening.
 
-30–48s: open Meet the materials; move the light, change warmth, and apply a finish.
+30–48s: fine-tune the selected piece in the studio; open Meet the materials, move the light, and apply a finish.
 
 48–65s: save the direction, open consultation, and show the prepared message with matching choices. Do not send a test inquiry to the business.
 

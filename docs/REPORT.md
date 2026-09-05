@@ -24,10 +24,16 @@ GitHub Actions is currently blocked before job startup by an account billing/spe
 
 - Generated images, models, and finishes are disclosed as illustrative concepts.
 - The inquiry opens WhatsApp for the visitor to review and send; it is not a server-backed lead database.
-- There is no public deployment or submitted hackathon entry yet.
+- The site is publicly deployed on Vercel; the hackathon entry has not been submitted.
 - Physical Safari/Android device checks remain for release. Current mobile checks use resized desktop Chrome.
 - The deferred 3D bundle triggers Vite's size warning. It is approximately 262 kB gzip and does not load with the initial page.
 
 ## Next release steps
 
-Deploy `dist/` to a public HTTPS static host, test that URL on real phones, record the 60–90 second interaction, publish the authorized public social entry with the required hashtag, and complete the organizer's form before the published deadline. See `SUBMISSION.md` for the sequence and recording script.
+Test the public Vercel URL on real phones, record the 60–90 second interaction, publish the authorized public social entry with the required hashtag, and complete the organizer's form before the published deadline. See `SUBMISSION.md` for the sequence and recording script.
+
+## Interactive room and public launch
+
+The follow-up release adds a complete interactive cutaway room with furniture selection, arrangements, camera transitions, wall tones, curtains, day/evening lighting, and a floor lamp. Three architectural shaders complement the existing vgpu material study. Shared model rendering and Meshopt compression reduce furniture delivery by 56% and primitive count by 91%. The room stops rendering when idle; its scene module adds approximately 4 kB gzip to the existing deferred 3D runtime.
+
+Live site: https://heaven-bespoke-studio.vercel.app. Vercel is linked to the GitHub repository. Source assets and local authentication metadata are excluded from deployment upload. See `ROOM-EXPERIENCE.md` for design and performance details.

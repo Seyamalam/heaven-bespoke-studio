@@ -29,3 +29,22 @@ A full-screen first-person walkthrough would hide useful controls and add collis
 ## Release
 
 Check real browser behavior on desktop and phone widths, run lint/tests/build, push meaningful milestones, deploy the static Vite build to Vercel, and verify the public URL without authentication. Do not send an inquiry or post a social entry during verification.
+
+## Implemented and measured
+
+The room now includes three selectable furniture models, four camera views, two arrangements, three wall tones, day/evening lighting, a floor lamp, curtain control, two quality settings, expanded view, and the existing consultation handoff. Three original GLSL shaders shade timber/window light, rug weave/border, and wall artwork. The vgpu close-up material study remains available in the bespoke studio.
+
+| Model | Original bytes | Delivered bytes | Original primitives | Delivered primitives |
+| ----- | -------------: | --------------: | ------------------: | -------------------: |
+| Sofa  |        290,032 |         124,784 |                  23 |                    3 |
+| Chair |        155,956 |          68,680 |                  14 |                    3 |
+| Table |        856,104 |         383,092 |                  52 |                    2 |
+| Total |      1,302,092 |         576,556 |                  89 |                    8 |
+
+The pipeline uses deduplication, flattening, material-compatible joining, welding, quantization, and Meshopt compression. Round-trip validation checks material names and model bounds within 2 mm. Original uncompressed exports are retained in `assets/source/models/`; Blender writes there and `npm run assets:models` creates the public GLBs.
+
+The room-specific production module is approximately 4 kB gzip, sharing the existing approximately 260 kB GPU/Three.js module with the furniture viewer. It is not downloaded before entry. Geometry files are 56% smaller in aggregate, and their primitive count falls by 91%. This is an asset/work reduction, not a claimed frame-rate percentage.
+
+On-demand rendering follows the [React Three Fiber performance guidance](https://r3f.docs.pmnd.rs/advanced/scaling-performance). Camera transitions invalidate until settled, and low-motion mode snaps directly to the chosen view. Tall mobile framing is bounded by the orbit distance to avoid a transition loop that cannot reach its destination.
+
+Development-only canvas diagnostics expose render-frame counts and shader compilation errors for browser verification; these diagnostics are omitted from production. The floor shader initially used a GLSL reserved identifier. Browser compilation diagnostics identified it; the identifier was corrected and the actual sunlit floor verified.

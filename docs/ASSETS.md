@@ -29,3 +29,7 @@ The custom arch wordmark and favicon are original SVG. Manrope and Cormorant Gar
 ## Size strategy
 
 The main 1536 px living/bedroom/dining/material images are approximately 266/229/167/200 kB. Mobile selects smaller variants. The 3D models and GPU module load on request. Original generation sources are retained in the repository for editing and provenance but are excluded from the static web build.
+
+## Room extension
+
+Original procedural room architecture is in `RoomScene.tsx`: floor/base, walls, window frame, corrugated curtain geometry, planter/foliage, lamp, framed artwork, and tabletop accents. The additional art, woven rug, and timber/window-light patterns are generated directly by GLSL shaders in `roomShaders.ts`; they require no downloaded textures. Furniture GLBs are now optimized to approximately 125/69/383 kB while editable Blender and uncompressed GLB sources remain available. Run Blender, then `npm run assets:models`, then `npm run assets:optimize` when regenerating.

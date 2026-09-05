@@ -18,9 +18,11 @@ npm run build
 npm run preview
 ```
 
-No API keys or backend are needed. `dist/` can be deployed to a static host. The GitHub repository is private; the website has not yet been publicly deployed.
+No API keys or backend are needed. `dist/` can be deployed to a static host. The GitHub repository is private. The live site is [heaven-bespoke-studio.vercel.app](https://heaven-bespoke-studio.vercel.app). Vercel is linked to the repository for deployments.
 
 ## What works
+
+- Interactive architectural room with selectable furniture, camera views, arrangements, wall tones, curtains, lighting, and quality controls.
 
 - Living, bedroom, and dining exploration with original concept imagery.
 - Sofa, lounge chair, and coffee table in an on-demand 3D studio.
@@ -41,6 +43,7 @@ npm run format:check
 npx vgpu doctor
 npm run gpu:check
 npm run assets:materials
+npm run assets:models
 npm run assets:optimize
 ```
 
@@ -48,6 +51,7 @@ GPU commands require a supported local GPU. They are separate from standard CI. 
 
 ```sh
 /Applications/Blender.app/Contents/MacOS/Blender --background --python scripts/build_furniture.py
+npm run assets:models
 npm run assets:optimize
 ```
 
@@ -56,6 +60,7 @@ npm run assets:optimize
 - [Product requirements](docs/PRD.md)
 - [Design direction](docs/DESIGN.md)
 - [Architecture](docs/ARCHITECTURE.md)
+- [Interactive room and performance measurements](docs/ROOM-EXPERIENCE.md)
 - [Implementation checklist](docs/TODO.md)
 - [Asset register](docs/ASSETS.md)
 - [vgpu opportunity and implementation](docs/VGPU.md)
