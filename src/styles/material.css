@@ -1,0 +1,295 @@
+.material-lab-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  background: #eceee4;
+  border: 1px solid #dfe3d5;
+  padding: 12px;
+  margin: 3px 0 17px;
+  color: var(--green);
+}
+.material-lab-trigger > span {
+  font-size: 10px;
+  flex: 1;
+}
+.material-lab-trigger small {
+  display: block;
+  font-size: 7px;
+  margin-top: 4px;
+  color: var(--muted);
+}
+.material-lab-trigger:hover {
+  background: #e2e7d8;
+}
+.context-note {
+  font-size: 11px;
+  line-height: 1.8;
+  padding-top: 16px;
+}
+.material-dialog {
+  padding: 0;
+  border: 0;
+  width: calc(100vw - 40px);
+  max-width: 940px;
+  max-height: calc(100dvh - 40px);
+  background: var(--ivory);
+  color: var(--ink);
+  overflow-y: auto;
+  box-shadow: 0 25px 100px #10251a40;
+}
+.material-dialog::backdrop {
+  background: #10251ac0;
+  backdrop-filter: blur(6px);
+}
+.material-dialog-inner {
+  padding: 35px;
+  position: relative;
+}
+.material-dialog-heading h2 {
+  font-size: 48px;
+  letter-spacing: -1.4px;
+  margin: 10px 0;
+}
+.material-dialog-heading h2:focus {
+  outline: none;
+}
+.material-dialog-heading > p {
+  font-size: 11px;
+  color: var(--muted);
+}
+.material-study-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 30px;
+  margin-top: 25px;
+}
+.material-canvas-wrap {
+  position: relative;
+  min-height: 400px;
+  overflow: hidden;
+}
+.material-fallback,
+.material-canvas-wrap canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.material-canvas-wrap canvas {
+  opacity: 0;
+  touch-action: none;
+  cursor: crosshair;
+}
+.material-canvas-wrap canvas.is-ready {
+  opacity: 1;
+}
+.material-canvas-wrap canvas:focus-visible {
+  outline: 2px solid white;
+  outline-offset: -6px;
+}
+.material-view-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 20px;
+  background: linear-gradient(transparent, #182d2477);
+  color: white;
+  pointer-events: none;
+}
+.material-view-label > span:first-child {
+  font-family: var(--serif);
+  font-size: 32px;
+}
+.material-view-label > span:last-child {
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.material-study-controls .piece-tabs button {
+  font-size: 10px;
+}
+.material-study-controls h3 {
+  font-size: 33px;
+  margin: 20px 0 8px;
+}
+.material-study-controls > p {
+  font-size: 10px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.lab-samples {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0 25px;
+}
+.lab-sample {
+  position: relative;
+  flex: 1;
+  cursor: pointer;
+  text-align: center;
+}
+.lab-sample input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+.lab-sample > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  background: var(--sample);
+  color: white;
+  border: 1px solid #00000010;
+}
+.lab-sample small {
+  font-size: 7px;
+  display: block;
+  margin-top: 6px;
+}
+.lab-sample input:checked + span {
+  outline: 1px solid var(--green);
+  outline-offset: 3px;
+}
+.lab-sample input:focus-visible + span {
+  outline: 2px solid var(--green);
+  outline-offset: 4px;
+}
+.lab-slider {
+  display: block;
+  font-size: 10px;
+  margin-bottom: 25px;
+}
+.lab-slider > span {
+  float: right;
+  font-size: 9px;
+  color: var(--muted);
+}
+.lab-slider input {
+  width: 100%;
+  accent-color: var(--green);
+  height: 4px;
+  margin: 17px 0 8px;
+}
+.lab-slider > div {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+}
+.material-study-controls p.lab-disclaimer {
+  font-size: 8px;
+  line-height: 1.7;
+  margin-top: 12px;
+}
+.material-study-controls .button {
+  min-height: 46px;
+  font-size: 10px;
+}
+@media (max-width: 650px) {
+  .material-dialog {
+    width: calc(100vw - 24px);
+    max-height: calc(100dvh - 24px);
+  }
+  .material-dialog-inner {
+    padding: 30px 22px 24px;
+  }
+  .material-dialog-heading h2 {
+    font-size: 38px;
+  }
+  .material-dialog-heading > .eyebrow {
+    font-size: 6px;
+  }
+  .material-dialog-heading > p {
+    font-size: 10px;
+    line-height: 1.7;
+  }
+  .material-study-layout {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    margin-top: 20px;
+  }
+  .material-canvas-wrap {
+    min-height: 260px;
+  }
+  .material-study-controls h3 {
+    margin-top: 17px;
+  }
+  .lab-samples {
+    margin: 17px 0 23px;
+  }
+  .lab-slider input {
+    height: 5px;
+  }
+  .lab-sample small {
+    font-size: 8px;
+  }
+}
+.material-lab-trigger > span {
+  font-size: 12px;
+}
+.material-lab-trigger small {
+  font-size: 9px;
+}
+.material-study-controls > p {
+  font-size: 12px;
+}
+.material-dialog-heading > p {
+  font-size: 13px;
+}
+.material-study-controls .piece-tabs button {
+  font-size: 12px;
+}
+.lab-slider {
+  font-size: 12px;
+}
+.lab-slider > span {
+  font-size: 11px;
+}
+.lab-sample small {
+  font-size: 9px;
+}
+.material-study-controls p.lab-disclaimer {
+  font-size: 10px;
+}
+.material-view-label > span:last-child {
+  font-size: 10px;
+}
+.material-study-controls .button {
+  font-size: 12px;
+}
+.lab-slider input {
+  height: 20px;
+  margin-top: 12px;
+}
+@media (max-width: 650px) {
+  .material-dialog-heading > p {
+    font-size: 12px;
+  }
+  .material-study-controls > p {
+    font-size: 12px;
+  }
+  .material-study-controls p.lab-disclaimer {
+    font-size: 10px;
+  }
+  .lab-sample small {
+    font-size: 9px;
+  }
+  .lab-sample > span {
+    height: 44px;
+  }
+  .lab-slider input {
+    height: 24px;
+  }
+}

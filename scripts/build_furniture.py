@@ -9,7 +9,7 @@ import bpy
 from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[1]
-for folder in ['public/models', 'public/images', 'assets/source/blender']:
+for folder in ['public/models', 'public/images', 'assets/source/blender', 'assets/source/posters']:
     (ROOT / folder).mkdir(parents=True, exist_ok=True)
 
 def material(name, color, roughness=.6, metallic=0):
@@ -162,7 +162,7 @@ for key, builder in [('sofa',sofa),('chair',chair),('table',table)]:
     scene.render.resolution_percentage=100
     scene.view_settings.view_transform='AgX'
     scene.render.image_settings.file_format='PNG'
-    scene.render.filepath=str(ROOT/'public/images'/f'{key}-poster.png')
+    scene.render.filepath=str(ROOT/'assets/source/posters'/f'{key}-poster.png')
     bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'assets/source/blender'/f'{key}.blend'))
     bpy.ops.render.render(write_still=True)
     print(f'COMPLETE {key}', flush=True)
