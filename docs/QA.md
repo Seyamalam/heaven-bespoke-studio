@@ -53,3 +53,5 @@ A model suspended inside a newly mounted R3F Canvas reproducibly lost its WebGL 
 - Idle rendering verified: the development canvas frame counter remained at 145 across separate observations more than 30 seconds apart after the camera settled. There is no continuous room animation loop.
 - Geometry optimization round-trip checks preserve material names and model bounds within 2 mm; total delivery falls from 1,302,092 to 576,556 bytes and primitive count from 89 to 8.
 - Vercel production build succeeded independently of the GitHub Actions billing restriction. Live URL: https://heaven-bespoke-studio.vercel.app.
+- Public end-to-end checks: entry loads the room only on request; the overhead camera works; forced WebGL loss offers retry and recovers with a healthy context; the room-to-studio action and live vgpu material dialog work on the production domain.
+- Consultation handoff verified with a selected 84 cm Pause chair in Deep teal. The editable WhatsApp message contains the matching design and business number. Nothing was sent.

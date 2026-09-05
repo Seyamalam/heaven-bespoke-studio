@@ -394,7 +394,7 @@ export default function RoomScene({
       shadows={{ type: PCFSoftShadowMap }}
       camera={{ position: [7.6, 5.6, 9.6], fov: 38, near: 0.1, far: 40 }}
       gl={{ antialias: true, alpha: true, powerPreference: "default" }}
-      fallback={<span>Use the controls below to plan your room.</span>}
+      fallback={<span aria-hidden="true" />}
       aria-label="Interactive living room. Choose a camera view or a furniture button below for keyboard control."
     >
       <ContextMonitor onUnavailable={onUnavailable} />
